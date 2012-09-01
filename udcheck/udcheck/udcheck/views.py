@@ -7,17 +7,20 @@ import udcheck.dictionary
 
 term_dict = udcheck.dictionary.create_dictionary()
 
-@view_config(route_name='home',
+@view_config(route_name='start',
              renderer='templates/start_page.pt')
 def start_page(request):
     sess = request.session
 
-    # Bootstrap the score if necessary
-    if 'total' not in sess:
-        sess['total'] = 0
-        sess['correct'] = 0
+    # Bootstrap the score
+    sess['total'] = 0
+    sess['correct'] = 0
 
-    # set up next question
+    return {'project':'udcheck'}
+
+@view_config(route_name='question',
+             renderer='templates/question.pt')
+def question(request):
     term1 = term_dict.get_random_term()
     term2 = term_dict.get_random_term()
     while term2.name == term1.name:
@@ -25,19 +28,23 @@ def start_page(request):
 
     correct_term = term1 if random.randint(0,1) else term2
 
-    sess['definition'] = correct_term.definitions[random.randint(0, len(correct_term.definitions) - 1)]
-    sess['term1'] = term1.name
-    sess['term2'] = term2.name
-    sess['correct_term'] = correct_term.name
-
-    return {'project':'udcheck'}
+    return {
+        'project': 'udcheck',
+        'term1': term1.name,
+        'term2': term2.name,
+        'correct_term': correct_term.name,
+        'definition': correct_term.definitions[
+            random.randint(
+                0,
+                len(correct_term.definitions) - 1)],
+    }
 
 @view_config(route_name='respond')
 def respond(request):
     sess = request.session
 
     try:
-        if request.POST['selection'] == request.session['correct_term']:
+        if request.POST['selection'] == request.POST['correct']:
             sess['correct'] = sess['correct'] + 1
             template = 'correct_response.pt'
         else:
