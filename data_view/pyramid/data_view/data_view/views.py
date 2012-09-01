@@ -9,7 +9,7 @@ from pyramid.view import view_config
 filename = 'cube_data.h5'
 # h5f = tables.openFile(filename, 'r')
 #arr = h5f.root.array
-arr = numpy.load('/home/abingham/projects/data_view/pyramid/data_view/data_cube.np.npy')
+arr = numpy.load('/home/abingham/projects/github_misc/data_view/pyramid/shaded_red.npy')
 #numpy.array(
 #    numpy.random.rand(100, 1000, 1000) * 255,
 #    dtype=numpy.uint8)
