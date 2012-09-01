@@ -24,17 +24,10 @@
   </div>
   <div id="question">
     ${request.session['definition']}
-    <div class="align-center">
-      is that
-    </div>
-    ${request.session['option1']}
-    <div class="align-center">
-      - or -
-    </div>
-    ${request.session['option2']}
     <form action="/respond" method="post">
-      <input type="submit" name="selection" value="term1" />
-      <input type="submit" name="selection" value="term2" />
+      <input type="submit" name="selection" value="${request.session['term1']}" />
+      - or -
+      <input type="submit" name="selection" value="${request.session['term2']}" />
     </form>
   </div>
   

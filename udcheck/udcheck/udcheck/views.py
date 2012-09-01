@@ -1,5 +1,11 @@
+import random
+
 from pyramid.renderers import render_to_response
 from pyramid.view import view_config
+
+import udcheck.dictionary
+
+term_dict = udcheck.dictionary.create_dictionary()
 
 @view_config(route_name='home',
              renderer='templates/start_page.pt')
@@ -12,10 +18,15 @@ def start_page(request):
         sess['correct'] = 0
 
     # set up next question
-    sess['definition'] = 'A funny name for a bear.'
-    sess['term1'] = 'Baloo'
-    sess['term2'] = 'Yonker'
-    sess['correct_term'] = 'term1'
+    term1 = term_dict.get_random_term()
+    term2 = term_dict.get_random_term()
+    while term2.name == term1.name:
+        term2 = term_dict.get_random_term()
+
+    sess['definition'] = term1.definitions[random.randint(0, len(term1.definitions) - 1)]
+    sess['term1'] = term1.name
+    sess['term2'] = term2.name
+    sess['correct_term'] = term1.name
 
     return {'project':'udcheck'}
 
