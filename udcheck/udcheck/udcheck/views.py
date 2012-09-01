@@ -23,10 +23,12 @@ def start_page(request):
     while term2.name == term1.name:
         term2 = term_dict.get_random_term()
 
-    sess['definition'] = term1.definitions[random.randint(0, len(term1.definitions) - 1)]
+    correct_term = term1 if random.randint(0,1) else term2
+
+    sess['definition'] = correct_term.definitions[random.randint(0, len(correct_term.definitions) - 1)]
     sess['term1'] = term1.name
     sess['term2'] = term2.name
-    sess['correct_term'] = term1.name
+    sess['correct_term'] = correct_term.name
 
     return {'project':'udcheck'}
 
