@@ -1,4 +1,5 @@
 import io
+import os
 
 import numpy
 import png
@@ -9,7 +10,10 @@ from pyramid.view import view_config
 filename = 'cube_data.h5'
 # h5f = tables.openFile(filename, 'r')
 #arr = h5f.root.array
-arr = numpy.load('/home/abingham/projects/github_misc/data_view/pyramid/shaded_red.npy')
+
+this_dir = os.path.split(os.path.abspath(__file__))[0]
+arr = numpy.load(os.path.join(this_dir, '..', 'red_shaded.npy'))
+
 #numpy.array(
 #    numpy.random.rand(100, 1000, 1000) * 255,
 #    dtype=numpy.uint8)
@@ -39,10 +43,17 @@ def info(request):
 @view_config(route_name='view_slice',
              request_method='GET')
 def view_slice(request):
+    try:
+        index = request.matchdict['index'][0]
+    except IndexError:
+        index = 0
+
+    # TODO: What if ['index'] is longer? We should report a 404 or something.
+
     return Response(
         '<html><img src="/image/{}/{}"/></html>'.format(
             request.matchdict['axis'],
-            request.matchdict['index']))
+            index))
 
 @view_config(route_name='slice_image',
              request_method='GET')
@@ -55,10 +66,10 @@ def slice_image(request):
                    data.shape[0],
                    palette=[(i, 0, 0) for i in range(255)],
                    bitdepth=8)
-    
+
     buff = io.BytesIO()
     w.write(buff, data)
     buff.seek(0)
     return Response(
-        body=buff.read(), 
+        body=buff.read(),
         content_type='image/png')
