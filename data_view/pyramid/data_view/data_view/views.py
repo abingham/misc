@@ -10,8 +10,10 @@ from pyramid.view import view_config
 filename = 'cube_data.h5'
 # h5f = tables.openFile(filename, 'r')
 #arr = h5f.root.array
+
 this_dir = os.path.split(os.path.abspath(__file__))[0]
 arr = numpy.load(os.path.join(this_dir, '..', 'red_shaded.npy'))
+
 #numpy.array(
 #    numpy.random.rand(100, 1000, 1000) * 255,
 #    dtype=numpy.uint8)
